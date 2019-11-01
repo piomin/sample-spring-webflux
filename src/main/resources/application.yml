@@ -1,0 +1,1 @@
+logging.pattern.console: "%clr(%d{HH:mm:ss.SSS}){blue} %clr(%-5p) %clr(---){faint} %clr(%m){faint}%n"

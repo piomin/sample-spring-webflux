@@ -21,13 +21,13 @@ public class PersonController {
     @GetMapping("/json")
     public Flux<Person> findPersonsJson() {
         return Flux.fromStream(this::prepareStream).delayElements(Duration.ofMillis(100))
-                .doOnNext(person -> LOGGER.info("Send: {}", person));
+                .doOnNext(person -> LOGGER.info("Server produces: {}", person));
     }
 
     @GetMapping(value = "/stream", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Flux<Person> findPersonsStream() {
         return Flux.fromStream(this::prepareStream).delayElements(Duration.ofMillis(100))
-                .doOnNext(person -> LOGGER.info("Send: {}", person));
+                .doOnNext(person -> LOGGER.info("Server produces: {}", person));
     }
 
     private Stream<Person> prepareStream() {

@@ -1,5 +1,8 @@
 package pl.piomin.services;
 
+import java.util.concurrent.TimeoutException;
+
+import net.jodah.concurrentunit.Waiter;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +18,27 @@ public class SampleSpringWebFluxTest {
     final WebClient client = WebClient.builder().baseUrl("http://localhost:8080").build();
 
     @Test
-    public void testFindPersonsJson() {
+    public void testFindPersonsJson() throws TimeoutException, InterruptedException {
+        final Waiter waiter = new Waiter();
         Flux<Person> persons = client.get().uri("/persons/json").retrieve().bodyToFlux(Person.class);
-        persons.subscribe(person -> LOGGER.info("Get: {}", person));
+        persons.subscribe(person -> {
+            waiter.assertNotNull(person);
+            LOGGER.info("Client subscribes: {}", person);
+            waiter.resume();
+        });
+        waiter.await(3000, 9);
     }
 
     @Test
-    public void testFindPersonsStream() {
+    public void testFindPersonsStream() throws TimeoutException, InterruptedException {
+        final Waiter waiter = new Waiter();
         Flux<Person> persons = client.get().uri("/persons/stream").retrieve().bodyToFlux(Person.class);
-        persons.subscribe(person -> LOGGER.info("Get: {}", person));
+        persons.subscribe(person -> {
+            waiter.assertNotNull(person);
+            LOGGER.info("Client subscribes: {}", person);
+            waiter.resume();
+        });
+        waiter.await(3000, 9);
     }
 
 }
