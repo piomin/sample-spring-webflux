@@ -1,3 +1,2 @@
-#logging.pattern.console: "%clr(%d{HH:mm:ss.SSS}){blue} %5p %clr(---){faint} %clr(%m){faint}%n"
 logging.pattern.console: "%clr(%d{HH:mm:ss.SSS}){blue} %clr(---){faint} %clr([%15.15t]){yellow} %clr(:){red} %clr(%m){faint}%n"
 spring.output.ansi.enabled: ALWAYS

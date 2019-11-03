@@ -10,8 +10,6 @@ import pl.piomin.services.model.Person;
 import reactor.core.publisher.Flux;
 
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -19,7 +17,6 @@ public class SampleSpringWebFluxTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SampleSpringWebFluxTest.class);
     final WebClient client = WebClient.builder().baseUrl("http://localhost:8080").build();
-    final RestTemplate template = new RestTemplateBuilder().rootUri("http://localhost:8080").build();
 
     @Test
     public void testFindPersonsJson() throws TimeoutException, InterruptedException {
