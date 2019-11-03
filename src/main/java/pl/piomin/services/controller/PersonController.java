@@ -20,12 +20,18 @@ public class PersonController {
 
     @GetMapping("/json")
     public Flux<Person> findPersonsJson() {
-        return Flux.fromStream(this::prepareStream).delayElements(Duration.ofMillis(100))
+        return Flux.fromStream(this::prepareStream)
                 .doOnNext(person -> LOGGER.info("Server produces: {}", person));
     }
 
     @GetMapping(value = "/stream", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Flux<Person> findPersonsStream() {
+        return Flux.fromStream(this::prepareStream).delaySequence(Duration.ofMillis(100))
+                .doOnNext(person -> LOGGER.info("Server produces: {}", person));
+    }
+
+    @GetMapping(value = "/stream/back-pressure", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    public Flux<Person> findPersonsStreamBackPressure() {
         return Flux.fromStream(this::prepareStream).delayElements(Duration.ofMillis(100))
                 .doOnNext(person -> LOGGER.info("Server produces: {}", person));
     }
