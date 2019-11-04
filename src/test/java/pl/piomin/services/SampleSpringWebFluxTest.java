@@ -58,9 +58,7 @@ public class SampleSpringWebFluxTest {
         try {
             Thread.sleep(90);
         }
-        catch (InterruptedException e) {
-
-        }
+        catch (InterruptedException e) { }
         return person;
     }
 }
