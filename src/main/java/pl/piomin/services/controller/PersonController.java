@@ -2,19 +2,30 @@ package pl.piomin.services.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 import pl.piomin.services.model.Person;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/persons")
 public class PersonController {
+
+    @Autowired
+    ThreadPoolTaskExecutor taskExecutor;
+    @Autowired
+    WebClient client;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PersonController.class);
 
@@ -49,4 +60,23 @@ public class PersonController {
             new Person(9, "Name09", "Surname09", 99)
         );
     }
+
+    @GetMapping("/integration")
+    public Flux<Person> findPersonsIntegration() {
+        client.get().uri("/slow").retrieve().bodyToMono(String.class)
+                .subscribe(s -> LOGGER.info("Subscribed: {}", s));
+        return Flux.fromStream(this::prepareStream)
+                .doOnNext(person -> LOGGER.info("Server produces: {}", person));
+    }
+
+    @GetMapping("/integration-in-different-pool")
+    public Flux<Person> findPersonsIntegrationInDifferentPool() {
+        client.get().uri("/slow").retrieve().bodyToMono(String.class)
+                .subscribeOn(Schedulers.fromExecutor(taskExecutor))
+                .publishOn(Schedulers.fromExecutor(taskExecutor))
+                .subscribe(s -> LOGGER.info("Subscribed: {}", s));
+        return Flux.fromStream(this::prepareStream)
+                .doOnNext(person -> LOGGER.info("Server produces: {}", person));
+    }
+
 }
