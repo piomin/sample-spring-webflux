@@ -60,13 +60,31 @@
         <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-client-java</artifactId>
-            <version>5.10</version>
+            <version>5.5.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.13.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.carrotsearch</groupId>
             <artifactId>junit-benchmarks</artifactId>
             <version>0.7.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.5.0-RC1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <version>4.5.0-RC1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

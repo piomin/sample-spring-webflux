@@ -1,4 +1,4 @@
 logging.pattern.console: "%clr(%d{HH:mm:ss.SSS}){blue} %clr(---){faint} %clr([%15.15t]){yellow} %clr(:){red} %clr(%m){faint}%n"
 spring.output.ansi.enabled: ALWAYS
 
-target.uri: http://localhost:8080
+target.uri: http://localhost:8082

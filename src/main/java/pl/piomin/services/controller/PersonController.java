@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -61,22 +62,36 @@ public class PersonController {
         );
     }
 
-    @GetMapping("/integration")
-    public Flux<Person> findPersonsIntegration() {
-        client.get().uri("/slow").retrieve().bodyToMono(String.class)
-                .subscribe(s -> LOGGER.info("Subscribed: {}", s));
-        return Flux.fromStream(this::prepareStream)
+	private Stream<Person> prepareStreamPart1() {
+		return Stream.of(
+				new Person(1, "Name01", "Surname01", 11),
+				new Person(2, "Name02", "Surname02", 22),
+				new Person(3, "Name03", "Surname03", 33)
+		);
+	}
+
+    @GetMapping("/integration/{param}")
+    public Flux<Person> findPersonsIntegration(@PathVariable("param") String param) {
+        return Flux.fromStream(this::prepareStreamPart1)
+				.mergeWith(
+						client.get().uri("/slow/" + param)
+								.retrieve()
+								.bodyToFlux(Person.class)
+				)
                 .doOnNext(person -> LOGGER.info("Server produces: {}", person));
     }
 
-    @GetMapping("/integration-in-different-pool")
-    public Flux<Person> findPersonsIntegrationInDifferentPool() {
-        client.get().uri("/slow").retrieve().bodyToMono(String.class)
-                .subscribeOn(Schedulers.fromExecutor(taskExecutor))
-                .publishOn(Schedulers.fromExecutor(taskExecutor))
-                .subscribe(s -> LOGGER.info("Subscribed: {}", s));
-        return Flux.fromStream(this::prepareStream)
-                .doOnNext(person -> LOGGER.info("Server produces: {}", person));
+    @GetMapping("/integration-in-different-pool/{param}")
+    public Flux<Person> findPersonsIntegrationInDifferentPool(@PathVariable("param") String param) {
+		return Flux.fromStream(this::prepareStreamPart1)
+				.mergeWith(
+						client.get().uri("/slow/" + param)
+								.retrieve()
+								.bodyToFlux(Person.class)
+								.subscribeOn(Schedulers.fromExecutor(taskExecutor))
+								.publishOn(Schedulers.fromExecutor(taskExecutor))
+				)
+				.doOnNext(person -> LOGGER.info("Server produces: {}", person));
     }
 
 }
