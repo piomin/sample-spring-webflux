@@ -84,7 +84,7 @@ public class PerformanceSpringWebFluxTest {
     }
 
     @Test
-    @BenchmarkOptions(warmupRounds = 0, concurrency = 50, benchmarkRounds = 300)
+    @BenchmarkOptions(warmupRounds = 10, concurrency = 50, benchmarkRounds = 300)
     public void testPerformance() throws InterruptedException {
         ResponseEntity<Person[]> r = template.exchange("/persons/integration/{param}", HttpMethod.GET, null, Person[].class, ++i);
         Assert.assertEquals(200, r.getStatusCodeValue());
@@ -93,7 +93,7 @@ public class PerformanceSpringWebFluxTest {
     }
 
     @Test
-    @BenchmarkOptions(warmupRounds = 0, concurrency = 50, benchmarkRounds = 300)
+    @BenchmarkOptions(warmupRounds = 10, concurrency = 50, benchmarkRounds = 300)
     public void testPerformanceInDifferentPool() throws InterruptedException {
         ResponseEntity<Person[]> r = template.exchange("/persons/integration-in-different-pool/{param}", HttpMethod.GET, null, Person[].class, ++i);
         Assert.assertEquals(200, r.getStatusCodeValue());

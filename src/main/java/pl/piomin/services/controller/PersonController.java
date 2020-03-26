@@ -72,26 +72,26 @@ public class PersonController {
 
     @GetMapping("/integration/{param}")
     public Flux<Person> findPersonsIntegration(@PathVariable("param") String param) {
-        return Flux.fromStream(this::prepareStreamPart1)
+        return Flux.fromStream(this::prepareStreamPart1).log()
 				.mergeWith(
 						client.get().uri("/slow/" + param)
 								.retrieve()
 								.bodyToFlux(Person.class)
-				)
-                .doOnNext(person -> LOGGER.info("Server produces: {}", person));
+								.log()
+				);
     }
 
     @GetMapping("/integration-in-different-pool/{param}")
     public Flux<Person> findPersonsIntegrationInDifferentPool(@PathVariable("param") String param) {
-		return Flux.fromStream(this::prepareStreamPart1)
+		return Flux.fromStream(this::prepareStreamPart1).log()
 				.mergeWith(
 						client.get().uri("/slow/" + param)
 								.retrieve()
 								.bodyToFlux(Person.class)
+								.log()
 								.subscribeOn(Schedulers.fromExecutor(taskExecutor))
 								.publishOn(Schedulers.fromExecutor(taskExecutor))
-				)
-				.doOnNext(person -> LOGGER.info("Server produces: {}", person));
+				);
     }
 
 }
