@@ -2,3 +2,5 @@ logging.pattern.console: "%clr(%d{HH:mm:ss.SSS}){blue} %clr(---){faint} %clr([%1
 spring.output.ansi.enabled: ALWAYS
 
 target.uri: http://localhost:8082
+
+management.endpoint.health.show-details: always # optionally - just for information
