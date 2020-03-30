@@ -1,3 +1,5 @@
-## Using Reactive WebClient with Spring WebFlux  [![Twitter](https://img.shields.io/twitter/follow/piotr_minkowski.svg?style=social&logo=twitter&label=Follow%20Me)](https://twitter.com/piotr_minkowski)
+## Spring WebFlux and Reactive WebClient Demo Project [![Twitter](https://img.shields.io/twitter/follow/piotr_minkowski.svg?style=social&logo=twitter&label=Follow%20Me)](https://twitter.com/piotr_minkowski)
 
-Detailed description can be found here: [Using Reactive WebClient with Spring WebFlux](https://piotrminkowski.com/2019/11/04/using-reactive-webclient-with-spring-webflux/)
+In this demo project you may examples of reactive endpoints built on top of Spring WebFlux, and using `WebClient` for calling other resources.
+1. Explaining different communication models in reactive application with Spring WebFlux. Differences between standard `application/json` content type and `application/stream+json`. Introduction to back pressure term. Detailed description can be found here: [Using Reactive WebClient with Spring WebFlux](https://piotrminkowski.com/2019/11/04/using-reactive-webclient-with-spring-webflux/)
+2. A detailed analyse of threading and concurrency model used by Spring WebFlux and Reactor Netty. It also threats about `WebClient` and Spring Boot Actuator pooling. A detailed description can be found here: [A Deep Dive Into Spring WebFlux Threading Model](https://piotrminkowski.com/2020/03/30/a-deep-dive-into-spring-webflux-threading-model/)
