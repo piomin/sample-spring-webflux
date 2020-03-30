@@ -9,8 +9,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.concurrent.Executor;
 
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @SpringBootApplication
 public class SampleSpringWebFluxApp {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SampleSpringWebFluxApp.class);
 
     public static void main(String[] args) {
         SpringApplication.run(SampleSpringWebFluxApp.class, args);
@@ -33,6 +40,11 @@ public class SampleSpringWebFluxApp {
     @Bean
     public WebClient webClient() {
         return WebClient.builder().baseUrl(targetUri).build();
+    }
+
+    @PostConstruct
+    public void init() {
+        LOGGER.info("CPU: {}", Runtime.getRuntime().availableProcessors());
     }
 
 }

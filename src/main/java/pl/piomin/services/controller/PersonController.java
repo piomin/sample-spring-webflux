@@ -1,7 +1,14 @@
 package pl.piomin.services.controller;
 
+import java.time.Duration;
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.piomin.services.model.Person;
+import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -10,14 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
-import pl.piomin.services.model.Person;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-
-import java.time.Duration;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/persons")
@@ -89,7 +88,6 @@ public class PersonController {
 								.retrieve()
 								.bodyToFlux(Person.class)
 								.log()
-								.subscribeOn(Schedulers.fromExecutor(taskExecutor))
 								.publishOn(Schedulers.fromExecutor(taskExecutor))
 				);
     }
