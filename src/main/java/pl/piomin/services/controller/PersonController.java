@@ -61,35 +61,35 @@ public class PersonController {
         );
     }
 
-	private Stream<Person> prepareStreamPart1() {
-		return Stream.of(
-				new Person(1, "Name01", "Surname01", 11),
-				new Person(2, "Name02", "Surname02", 22),
-				new Person(3, "Name03", "Surname03", 33)
-		);
-	}
+    private Stream<Person> prepareStreamPart1() {
+        return Stream.of(
+            new Person(1, "Name01", "Surname01", 11),
+            new Person(2, "Name02", "Surname02", 22),
+            new Person(3, "Name03", "Surname03", 33)
+        );
+    }
 
     @GetMapping("/integration/{param}")
     public Flux<Person> findPersonsIntegration(@PathVariable("param") String param) {
         return Flux.fromStream(this::prepareStreamPart1).log()
-				.mergeWith(
-						client.get().uri("/slow/" + param)
-								.retrieve()
-								.bodyToFlux(Person.class)
-								.log()
-				);
+            .mergeWith(
+                client.get().uri("/slow/" + param)
+                    .retrieve()
+                    .bodyToFlux(Person.class)
+                    .log()
+            );
     }
 
     @GetMapping("/integration-in-different-pool/{param}")
     public Flux<Person> findPersonsIntegrationInDifferentPool(@PathVariable("param") String param) {
-		return Flux.fromStream(this::prepareStreamPart1).log()
-				.mergeWith(
-						client.get().uri("/slow/" + param)
-								.retrieve()
-								.bodyToFlux(Person.class)
-								.log()
-								.publishOn(Schedulers.fromExecutor(taskExecutor))
-				);
+        return Flux.fromStream(this::prepareStreamPart1).log()
+            .mergeWith(
+                client.get().uri("/slow/" + param)
+                    .retrieve()
+                    .bodyToFlux(Person.class)
+                    .log()
+                    .publishOn(Schedulers.fromExecutor(taskExecutor))
+            );
     }
 
 }
