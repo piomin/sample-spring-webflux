@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim
+FROM openjdk:11.0.16-jre-slim
 ENV APP_FILE sample-spring-webflux-0.0.2.jar
 ENV APP_HOME /usr/apps
 EXPOSE 8080
