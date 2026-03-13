@@ -1,21 +1,19 @@
 package pl.piomin.services;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.jetbrains.annotations.NotNull;
-import pl.piomin.services.model.Person;
-
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.http.HttpMethod;
+import pl.piomin.services.model.Person;
+import tools.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class SendingApp {
 
@@ -34,17 +32,11 @@ public class SendingApp {
 				List<Person> personsPart2 = List.of(new Person(r.nextInt(100000), "Name" + pathParam, "Surname" + pathParam, r.nextInt(100)),
 						new Person(r.nextInt(100000), "Name" + pathParam, "Surname" + pathParam, r.nextInt(100)),
 						new Person(r.nextInt(100000), "Name" + pathParam, "Surname" + pathParam, r.nextInt(100)));
-				try {
-					return new MockResponse()
-							.setResponseCode(200)
-							.setBody(mapper.writeValueAsString(personsPart2))
-							.setHeader("Content-Type", "application/json")
-							.setBodyDelay(200, TimeUnit.MILLISECONDS);
-				}
-				catch (JsonProcessingException e) {
-					e.printStackTrace();
-				}
-				return null;
+				return new MockResponse()
+						.setResponseCode(200)
+						.setBody(mapper.writeValueAsString(personsPart2))
+						.setHeader("Content-Type", "application/json")
+						.setBodyDelay(200, TimeUnit.MILLISECONDS);
 			}
 		};
 		mockBackEnd = new MockWebServer();

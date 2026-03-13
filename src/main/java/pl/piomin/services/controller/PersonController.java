@@ -35,13 +35,13 @@ public class PersonController {
                 .doOnNext(person -> LOGGER.info("Server produces: {}", person));
     }
 
-    @GetMapping(value = "/stream", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    @GetMapping(value = "/stream", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public Flux<Person> findPersonsStream() {
         return Flux.fromStream(this::prepareStream).delaySequence(Duration.ofMillis(100))
                 .doOnNext(person -> LOGGER.info("Server produces: {}", person));
     }
 
-    @GetMapping(value = "/stream/back-pressure", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    @GetMapping(value = "/stream/back-pressure", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public Flux<Person> findPersonsStreamBackPressure() {
         return Flux.fromStream(this::prepareStream).delayElements(Duration.ofMillis(100))
                 .doOnNext(person -> LOGGER.info("Server produces: {}", person));
