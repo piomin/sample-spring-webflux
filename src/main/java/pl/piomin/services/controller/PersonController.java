@@ -35,13 +35,13 @@ public class PersonController {
                 .doOnNext(person -> LOGGER.info("Server produces: {}", person));
     }
 
-    @GetMapping(value = "/stream", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/stream")
     public Flux<Person> findPersonsStream() {
         return Flux.fromStream(this::prepareStream).delaySequence(Duration.ofMillis(100))
                 .doOnNext(person -> LOGGER.info("Server produces: {}", person));
     }
 
-    @GetMapping(value = "/stream/back-pressure", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/stream/back-pressure")
     public Flux<Person> findPersonsStreamBackPressure() {
         return Flux.fromStream(this::prepareStream).delayElements(Duration.ofMillis(100))
                 .doOnNext(person -> LOGGER.info("Server produces: {}", person));
@@ -70,7 +70,7 @@ public class PersonController {
     }
 
     @GetMapping("/integration/{param}")
-    public Flux<Person> findPersonsIntegration(@PathVariable("param") String param) {
+    public Flux<Person> findPersonsIntegration(@PathVariable String param) {
         return Flux.fromStream(this::prepareStreamPart1).log()
             .mergeWith(
                 client.get().uri("/slow/" + param)
@@ -81,7 +81,7 @@ public class PersonController {
     }
 
     @GetMapping("/integration-in-different-pool/{param}")
-    public Flux<Person> findPersonsIntegrationInDifferentPool(@PathVariable("param") String param) {
+    public Flux<Person> findPersonsIntegrationInDifferentPool(@PathVariable String param) {
         return Flux.fromStream(this::prepareStreamPart1).log()
             .mergeWith(
                 client.get().uri("/slow/" + param)
